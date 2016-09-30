@@ -1,0 +1,12 @@
+12.18
+A. unsafe
+B. safe
+C. unsafe
+
+12.24
+ssize_t rio_readn(int fd, void *usrbuf, size_t n); // Reentrant since it doesn't call global variables
+ssize_t rio_writen(int fd, void *usrbuf, size_t n); // Reentrant since it doesn't call global variables
+void rio_readinitb(rio_t *rp, int fd); // Nonreentrant since rio_t is a global struct
+static ssize_t rio_read(rio_t *rp, char *usrbuf, size_t n); // Nonreentrant since rio_t is a global struct
+ssize_t rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen); // Nonreentrant since rio_t is a global struct
+ssize_t rio_readnb(rio_t *rp, void *usrbuf, size_t n); // Nonreentrant since rio_t is a global struct

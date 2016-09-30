@@ -1,0 +1,49 @@
+-O2
+========================
+
+testovf:
+        xorl    %eax, %eax
+        ret
+
+This function always returns 0 (xor %eax,%eax). This is because the compiler considers overflow undefined behavior and optimizes accordingly. In this case, the compiler recognizes that cases like (big+c)<big ,where c is any positive constant, are always false so it returns a 0 without comparing.
+
+
+-O2 -fsanitize=undefined
+========================
+
+testovf:
+        pushq   %rbp
+        pushq   %rbx
+        movabsq $9223372036854775807, %rdx
+        subq    $8, %rsp
+        movq    big(%rip), %rbx
+        movq    %rbx, %rbp
+        addq    %rdx, %rbp
+        jo      .L6
+.L2:
+        cmpq    %rbp, %rbx
+        setg    %al
+        addq    $8, %rsp
+        popq    %rbx
+        popq    %rbp
+        ret
+.L6:
+        movq    %rbx, %rsi
+        movl    $.Lubsan_data0, %edi
+        call    __ubsan_handle_add_overflow
+        jmp     .L2
+
+This function adds big to LONG_MAX(add %rdx,%rax) and checks if the result overflows. If it overflows, the __ubsan_handle_add_overflow function is called and an error message is printed. After this, it goes back to normal execution and compares %rbp(big+LONG_MAX) and %rdx(big) and returns the appropriate result stored in register %al. The call frame is then restored to what it was before. s
+
+-O2 -fwrapv
+========================
+
+testovf:
+        movq    big(%rip), %rdx
+        movabsq $9223372036854775807, %rax
+        addq    %rdx, %rax
+        cmpq    %rax, %rdx
+        setg    %al
+        ret
+
+This function adds big to LONG_MAX(add %rdx,%rax) and checks if the result is less than big. The result of the check is stored in the %al register and is returned. In our case, %rdx originally holds big and %rax originally holds LONG_MAX. The result of big added to LONG_MAX is stored in %rax. %rax(LONG_MAX+big) is then compared to %rdx(big) and the result is stored in the register %al.

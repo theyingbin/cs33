@@ -1,0 +1,23 @@
+// Note I'm doing problems from the second edition
+
+3.64
+A. 8(%ebp) = str2* result
+   12(%ebp) = s1.a
+   16(%ebp) = s1.p
+
+B. The first word is for the returned value.
+   The second and third words are for s1's member variables, a and p.
+   The third and fourth words are for s2's member variables, sum and diff.
+
+C. To pass in structures as arguments, the contents of the structure are stored in the stack and the first element is passed in. The callee can obtain other elements using offsets from the first element.
+
+D. To handle returning a structure, the contents of the structure are stored in the stack and a pointer pointing to that structure is returned.
+
+3.67
+A.  e1.p: 0
+    e1.y: 4
+    e2.x: 0
+    e2.next: 4
+
+B. 8 bytes
+C. up->e2.next->e1.y = *(up->e2.next->e1.p) - up->e2.x;

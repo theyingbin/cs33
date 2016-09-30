@@ -1,0 +1,34 @@
+Gather instruction traces
+-I typed the following to enter gdb:
+	gdb --args ~eggert/bin64/bin/emacs-24.5
+-I used the following command before I began tracing using the following instruction in gdb:
+	set disassemble-next-line on
+-I then set a break point at Ftimes using the following instruction in gdb:
+	break Ftimes
+-I then ran the code using the following command in gdb:
+	r
+-Upon tracing, I would look at the registers to see which ones has changed. This is done using the following command in gdb:
+	info r
+-To go to the next instruction, I use the following command in gdb:
+	si
+-Occasionally, when the contents of memory are changed, I check out what changed at the address using the following command:
+	x [address]
+-I repeated the above three steps until I reached the end of the function
+
+
+Examine integer overflow handling
+-I first made a .c file called testovf with the following command:
+	emacs testovf.c
+-In the emacs, I manually typed in the code on the project spec
+-Back in terminal, I created an object file called testovf.o for just -O2 using the following command:
+	gcc -c -O2 testovf.c
+-To get the assembly code, I used the following command:
+	objdump -d testovf.o
+-Back in the terminal, I created another object file called testovf.o(which replaces the other one) for -O2 -fsanitize=undefined using the following command:
+	gcc -c -O2 -fsanitize=undefined testovf.c
+-To get the assembly code, I used the following command:
+	objdump -d testovf.o
+-Back in the terminal, I created another object file called testovf.o(which replaces the other one) for -O2 -fwrapv using the following command:
+	gcc -c -O2 -fwrapv testovf.c
+-To get the assembly code, I used the following command:
+	objdump -d testovf.o

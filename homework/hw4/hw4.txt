@@ -1,0 +1,37 @@
+Note: I am doing the problems from the second edition book
+
+2.88
+A. This always yields a 1. This is because the results are mathematically equal and any rounding errors that would occur would be the same for both sides.
+B. This does not always yield a 1. One counter example is when x=0 and y=TMIN. In this case, the right hand side overflows during subtraction and the result of the overflow is casted. On the left hand side, the results are casted into a double and then subtracted. The difference between the two methods is that doubles can hold a greater range of values than ints can.
+C. This does not always yield a 1. The inexactness of floating point operations may cause problems. In this case, there are two operations done in 2 different orders, which may cause different rounding errors depending on the order of operation.
+D. This does not always yield a 1. Multiplying in different order can lead to inexact results on both sides but these inexact results may differ depending on the order of operations.
+E. This does not always yield a 1. One counter example is when dx=0.0 and dy=1.0.
+
+2.89
+float fpwr2(int x)
+{
+    /* Result exponent and fraction */
+    unsigned exp, frac;
+    unsigned u;
+    if (x < -149) {
+        /* Too small. Return 0.0 */
+        exp = 0;
+        frac = 0;
+    } else if (x < -126) {
+        /* Denormalized result */
+        exp = 0;
+        frac = 1<<(x+149);
+    } else if (x < 128) {
+        /* Normalized result. */
+        exp = x+127;
+        frac = 0;
+    } else {
+        /* Too big. Return +oo */
+        exp = 255;
+        frac = 0;
+    }
+    /* Pack exp and frac into 32 bits */
+    u = exp << 23 | frac;
+    /* Return as float */
+    return u2f(u);
+}

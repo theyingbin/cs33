@@ -1,0 +1,20 @@
+1. Getting started with OpenMPLab
+	a. First I downloaded the openmplab.tgz file from CCLE
+	b. Then I extracted the files on the linux server using the following command
+		$ tar -zxvf openmplab.tgz
+	c. Then in the openmplab directory, I made sure the unoptimized code worked by running it with the following commands
+		$ make seq
+		$ ./seq
+2. Optimizing func.c
+	a. I first checked which function was the bottleneck by using gprof
+		$ make seq GPROF=1
+		$ ./seq
+		$ gprof seq|less
+	b. Then I made changes to func.c so it would be optimized. The changes I made are documented in func.c
+	c. I then tested the speed of the new code using the following command
+		$ make omp
+		$ ./omp
+	d. I repeat step a except I replace seq with omp and optimize accordingly
+		$ make omp GPROF=1
+		$ ./omp
+		$ gprof omp|less

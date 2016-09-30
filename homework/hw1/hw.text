@@ -1,0 +1,23 @@
+2.64
+int any_odd_one(unsigned x){
+    return (x & AAAAAAAA) && 1;
+}
+2.71
+A. The byte was not sign extended
+B. 
+int xbyte(packed_t word, int bytenum){
+    return word << (24-(bytenum<<3))>>24;
+}
+2.72
+A. The condition test always succeeds because we are subtracting a value of type int from a value of type size_t which results in a value of size_t. If this result is supposed to be negative, there will be overflow, which wraps around on the other side. This means we will never have a negative value, making it so the condition is always true. 
+B. To fix this, we can check that maxbytes is greater than sizeof(val)instead of subtracting and comparing it to zero
+void copy_int(int val, void* buff, int maxbytes){
+     if(maxbytes>=sizeof(val))
+	memcpy(buf, (void*)&val, sizeof(val));
+} 
+2.82
+A. (x<y) == (-x>-y) does not always evaluate to be true because if x is equal to INT_MIN and y is equal to 0, the expression returns 0.
+B. ((x+y)<<4)+y-x == 17*y + 15*x always evaluates to 1 because the left hand side evaluates to (x+y)*2^4+y-x and if we do some algebra, we find out that the left hand side simplifies to 17*y+15*x.
+C. ~x+~y+1 == ~(x+y) evaluates to 0 when x=INT_MIN and y=-1
+D. (ux-uy) == -(unsigned)(y-x) always evaluates to 1 because (int)(ux-uy)=x-y=-(y-x)
+E. ((x>>2)<<2)<=x always evaluates to 1 because its the equivalent of diving by 4 then multiplying by 4. In this case, there will never be overflow to cause unexpected results. Because the right shift floors the result, we cannot have an answer that is greater than the original.
